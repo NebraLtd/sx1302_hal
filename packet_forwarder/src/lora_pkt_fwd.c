@@ -60,6 +60,7 @@ License: Revised BSD License, see LICENSE.TXT file include in the project
 #include "loragw_reg.h"
 #include "loragw_gps.h"
 #include "cursor/packing.h"
+#include "loragw_sx1302.h"
 
 /* -------------------------------------------------------------------------- */
 /* --- PRIVATE MACROS ------------------------------------------------------- */
@@ -3391,7 +3392,7 @@ static void modify_os_time(const uint32_t ppm_tstamp)
     gettimeofday(&stamp, NULL);
     int time_diff = 0;
     lgw_cnt2utc(time_reference_gps, ppm_tstamp, &y);
-    if ((!gps_enabled) || time_already_set)
+    if ((!gps_dev) || time_already_set)
     {
         return;
     }
@@ -3422,7 +3423,7 @@ static void modify_os_time(const uint32_t ppm_tstamp)
         char buf[128] = {0};
         t = time(NULL);
         local = localtime(&t);
-        strftime(buf, 64, "%Y-%m-%d %H:%M:%S", local);  
+        strftime(buf, 64, "%Y-%m-%d %H:%M:%S", local);
         MSG("INFO: [modify_os_time] System time has been synchronized via GPS, %s\n", buf);
     }
 }
@@ -3454,7 +3455,7 @@ static void gps_process_sync(void) {
 
     /* try to update time reference with the new GPS time & timestamp */
     pthread_mutex_lock(&mx_timeref);
-    i = lgw_gps_sync(&time_reference_gps, trig_tstamp, utc, gps_time);
+    i = lgw_gps_sync(&time_reference_gps, trig_tstamp, utc, utc_acc, gps_time);
     modify_os_time(trig_tstamp);
     pthread_mutex_unlock(&mx_timeref);
     if (i != LGW_GPS_SUCCESS) {

@@ -1173,14 +1173,102 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
 
     /* Take control over AGC MCU */
     err |= lgw_reg_w(SX1302_REG_AGC_MCU_CTRL_MCU_CLEAR, 0x01);
+
+    if(err != LGW_REG_SUCCESS) {
+        printf("DBG: L1178");
+    }
+
     err |= lgw_reg_w(SX1302_REG_AGC_MCU_CTRL_HOST_PROG, 0x01);
+
+    if(err != LGW_REG_SUCCESS) {
+        printf("DBG: L1184");
+    }
+
     err |= lgw_reg_w(SX1302_REG_COMMON_PAGE_PAGE, 0x00);
+
+    if(err != LGW_REG_SUCCESS) {
+        printf("DBG: L1190");
+    }
 
     /* Write AGC fw in AGC MEM */
     err |= lgw_mem_wb(AGC_MEM_ADDR, firmware, MCU_FW_SIZE);
 
+    if(err != LGW_REG_SUCCESS) {
+        printf("DBG: L1197");
+    }
+
     /* Read back and check */
     err |= lgw_mem_rb(AGC_MEM_ADDR, fw_check, MCU_FW_SIZE, false);
+    if(err != LGW_REG_SUCCESS) {
+        printf("DBG: L1203");
+    }
+
+
+    printf("DBG: MCU Firmware Contents:");
+
+    int remaining_bytes = MCU_FW_SIZE;
+    while(remaining_bytes > 0) {
+        printf("\n ");
+        int chunk_size = 128;
+        if(remaining_bytes < 128) {
+            chunk_size = remaining_bytes;
+        }
+
+        for(int i = 0; i < chunk_size; i++) {
+            printf(" %02x", firmware[i]);
+        }
+
+        remaining_bytes -= chunk_size;
+    }
+
+    printf("DBG: Read Firmware Contents:");
+
+    remaining_bytes = MCU_FW_SIZE;
+    while(remaining_bytes > 0) {
+        printf("\n ");
+        int chunk_size = 128;
+        if(remaining_bytes < 128) {
+            chunk_size = remaining_bytes;
+        }
+
+        for(int i = 0; i < chunk_size; i++) {
+            printf(" %02x", fw_check[i]);
+        }
+
+        remaining_bytes -= chunk_size;
+    }
+
+    printf("\nDBG: AGC Firmware Diff Map:");
+
+    remaining_bytes = MCU_FW_SIZE;
+    while(remaining_bytes > 0) {
+        printf("\nDBG: ");
+        int chunk_size = 128;
+        if(remaining_bytes < 128) {
+            chunk_size = remaining_bytes;
+        }
+
+        for(int i = 0; i < chunk_size; i++) {
+            if(firmware[MCU_FW_SIZE - remaining_bytes - i] == fw_check[MCU_FW_SIZE - remaining_bytes - i]) {
+                printf(".");
+            } else {
+                printf("X");
+            }
+        }
+
+        remaining_bytes -= chunk_size;
+    }
+
+    printf("\n DBG: Equality Map:");
+
+    for(int i = 0; i < MCU_FW_SIZE; i++) {
+        if(firmware[i] == fw_check[i]) {
+            printf(" %04x", i);
+        }
+    }
+
+    printf("\n");
+
     if (memcmp(firmware, fw_check, sizeof fw_check) != 0) {
         printf("ERROR: AGC fw read/write check failed\n");
         return LGW_REG_ERROR;

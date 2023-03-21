@@ -1204,12 +1204,12 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
     }
 
 
-    printf("DBG: MCU Firmware Contents:");
+    printf("\nDBG: MCU Firmware Contents:");
 
     int remaining_bytes = MCU_FW_SIZE;
     int line_num = 0;
     while(remaining_bytes > 0) {
-        printf("\n%02u", line_num);
+        printf("\n%03u:", line_num);
         line_num++;
         int chunk_size = 64;
         if(remaining_bytes < 64) {
@@ -1223,12 +1223,12 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
         remaining_bytes -= chunk_size;
     }
 
-    printf("DBG: Read Firmware Contents:");
+    printf("\nDBG: Read Firmware Contents:");
 
     remaining_bytes = MCU_FW_SIZE;
     line_num = 0;
     while(remaining_bytes > 0) {
-        printf("\n%02u", line_num);
+        printf("\n%03u:", line_num);
         line_num++;
         int chunk_size = 64;
         if(remaining_bytes < 64) {
@@ -1247,7 +1247,7 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
     remaining_bytes = MCU_FW_SIZE;
     line_num = 0;
     while(remaining_bytes > 0) {
-        printf("\n%02u", line_num);
+        printf("\n%03u:", line_num);
         line_num++;
         int chunk_size = 128;
         if(remaining_bytes < 128) {
@@ -1265,7 +1265,7 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
         remaining_bytes -= chunk_size;
     }
 
-    printf("\n DBG: Equality Map:");
+    printf("\nDBG: Equality Map:");
 
     for(int i = 0; i < MCU_FW_SIZE; i++) {
         if(firmware[i] == fw_check[i]) {

@@ -1207,10 +1207,12 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
     printf("DBG: MCU Firmware Contents:");
 
     int remaining_bytes = MCU_FW_SIZE;
+    int line_num = 0;
     while(remaining_bytes > 0) {
-        printf("\n ");
-        int chunk_size = 128;
-        if(remaining_bytes < 128) {
+        printf("\n%02u", line_num);
+        line_num++;
+        int chunk_size = 64;
+        if(remaining_bytes < 64) {
             chunk_size = remaining_bytes;
         }
 
@@ -1224,10 +1226,12 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
     printf("DBG: Read Firmware Contents:");
 
     remaining_bytes = MCU_FW_SIZE;
+    line_num = 0;
     while(remaining_bytes > 0) {
-        printf("\n ");
-        int chunk_size = 128;
-        if(remaining_bytes < 128) {
+        printf("\n%02u", line_num);
+        line_num++;
+        int chunk_size = 64;
+        if(remaining_bytes < 64) {
             chunk_size = remaining_bytes;
         }
 
@@ -1241,8 +1245,10 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
     printf("\nDBG: AGC Firmware Diff Map:");
 
     remaining_bytes = MCU_FW_SIZE;
+    line_num = 0;
     while(remaining_bytes > 0) {
-        printf("\nDBG: ");
+        printf("\n%02u", line_num);
+        line_num++;
         int chunk_size = 128;
         if(remaining_bytes < 128) {
             chunk_size = remaining_bytes;

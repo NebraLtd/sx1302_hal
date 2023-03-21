@@ -1217,7 +1217,7 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
         }
 
         for(int i = 0; i < chunk_size; i++) {
-            printf(" %02x", firmware[i]);
+            printf(" %02x", firmware[MCU_FW_SIZE - remaining_bytes + i]);
         }
 
         remaining_bytes -= chunk_size;
@@ -1236,7 +1236,7 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
         }
 
         for(int i = 0; i < chunk_size; i++) {
-            printf(" %02x", fw_check[i]);
+            printf(" %02x", fw_check[MCU_FW_SIZE - remaining_bytes + i]);
         }
 
         remaining_bytes -= chunk_size;
@@ -1255,7 +1255,7 @@ int sx1302_agc_load_firmware(const uint8_t *firmware) {
         }
 
         for(int i = 0; i < chunk_size; i++) {
-            if(firmware[MCU_FW_SIZE - remaining_bytes - i] == fw_check[MCU_FW_SIZE - remaining_bytes - i]) {
+            if(firmware[MCU_FW_SIZE - remaining_bytes + i] == fw_check[MCU_FW_SIZE - remaining_bytes + i]) {
                 printf(".");
             } else {
                 printf("X");

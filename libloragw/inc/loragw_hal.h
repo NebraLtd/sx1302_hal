@@ -126,7 +126,7 @@ License: Revised BSD License, see LICENSE.TXT file include in the project
 #define RX_SUSPENDED        3    /* RX is suspended while a TX is ongoing */
 
 /* Maximum size of Tx gain LUT */
-#define TX_GAIN_LUT_SIZE_MAX 16
+#define TX_GAIN_LUT_SIZE_MAX 32
 
 /* Listen-Before-Talk */
 #define LGW_LBT_CHANNEL_NB_MAX 16 /* Maximum number of LBT channels */
